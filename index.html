@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduAutomate — AI Automation for Coaching Institutes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F9FAFB;
+      --bg2: #E8F5EE;
+      --text: #1F2937;
+      --accent: #10B981;
+      --accent-h: #34D399;
+      --accent-pale: rgba(16,185,129,0.09);
+      --accent-border: rgba(16,185,129,0.22);
+      --border: #D1E7DD;
+      --white: #ffffff;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --nav-h: 72px;
+      --max-w: 1240px;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(16,185,129,0.08);
+      --shadow-lg: 0 16px 56px rgba(16,185,129,0.14);
+      --ease: cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 400; line-height: 1.7; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+    .section-pad { padding: 112px 0; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 2px; background: var(--accent); border-radius: 2px; }
+    .section-heading { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 20px; }
+    .section-heading em { font-style: normal; color: var(--accent); }
+    .section-heading.light { color: var(--white); }
+    .section-heading.light em { color: var(--accent-h); }
+    .section-sub { font-size: 1rem; line-height: 1.8; color: rgba(31,41,55,0.65); max-width: 560px; }
+    .section-sub.light { color: rgba(255,255,255,0.72); }
+    .section-header.center { text-align: center; margin-bottom: 72px; }
+    .section-header.center .section-sub { margin: 0 auto; }
+    .section-header.center .section-label { justify-content: center; }
+    .section-header.center .section-label::before { display: none; }
+
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--white); font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; padding: 15px 28px; border: none; cursor: pointer; text-decoration: none; transition: background 0.3s, transform 0.2s, box-shadow 0.3s; border-radius: 50px; }
+    .btn-primary:hover { background: var(--accent-h); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(16,185,129,0.38); }
+    .btn-primary.full { width: 100%; justify-content: center; }
+    .btn-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--white); font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; padding: 14px 28px; border: 1.5px solid rgba(255,255,255,0.35); cursor: pointer; text-decoration: none; transition: border-color 0.3s, color 0.3s, background 0.3s; border-radius: 50px; }
+    .btn-outline:hover { border-color: var(--accent-h); color: var(--accent-h); background: rgba(16,185,129,0.07); }
+    .btn-outline.dark { color: var(--text); border-color: var(--border); }
+    .btn-outline.dark:hover { border-color: var(--accent); color: var(--accent); }
+
+    .reveal-fade, .reveal-up, .reveal-card { opacity: 0; transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-up { transform: translateY(28px); }
+    .reveal-card { transform: translateY(20px); }
+    .reveal-fade.visible, .reveal-up.visible, .reveal-card.visible { opacity: 1; transform: none; }
+    .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; } .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; } .d5 { transition-delay: 0.5s; }
+
+    /* ── NAVBAR ── */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--nav-h); transition: background 0.4s, box-shadow 0.4s; }
+    .navbar.scrolled { background: rgba(249,250,251,0.95); backdrop-filter: blur(20px); box-shadow: 0 1px 0 var(--border); }
+    .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+    .logo-icon { width: 34px; height: 34px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-icon svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .logo-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--text); }
+    .logo-name span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-link { font-size: 13.5px; font-weight: 600; color: var(--accent); text-decoration: none; padding: 7px 14px; border-radius: 8px; transition: color 0.2s, background 0.2s; cursor: pointer; white-space: nowrap; }
+    .nav-link:hover { color: #059669; background: var(--accent-pale); }
+    .nav-cta { background: var(--accent); color: var(--white) !important; padding: 9px 20px; border-radius: 50px; font-weight: 600; }
+    .nav-cta:hover { background: var(--accent-h) !important; color: var(--white) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); transition: transform 0.3s, opacity 0.3s; }
+    .mobile-nav { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); flex-direction: column; padding: 8px 0 20px; z-index: 999; transform: translateY(-110%); opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease; box-shadow: var(--shadow-lg); }
+    .mobile-nav.open { transform: none; opacity: 1; }
+    .mobile-nav a { display: block; padding: 13px 32px; font-size: 15px; color: var(--accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border); cursor: pointer; transition: color 0.2s, background 0.2s; }
+    .mobile-nav a:last-child { border: none; margin: 12px 24px 0; background: var(--accent); color: white; border-radius: 50px; text-align: center; padding: 13px; }
+    .mobile-nav a:hover { color: #059669; background: var(--accent-pale); }
+    .mobile-nav a:last-child:hover { background: var(--accent-h); color: white; }
+
+    /* ── PAGE SWITCH ── */
+    #page-main, #page-service { transition: opacity 0.3s ease; }
+    #page-service { display: none; }
+
+    /* ── HERO ── */
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; background: #0d1f17; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.35) saturate(1.1); }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,30,20,0.88) 0%, rgba(16,185,129,0.08) 100%); }
+    .hero-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(16,185,129,0.12) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.6; pointer-events: none; }
+    .hero-glow { position: absolute; top: -10%; right: -5%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 65%); pointer-events: none; animation: glowPulse 5s ease-in-out infinite; }
+    @keyframes glowPulse { 0%,100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.08); } }
+    .hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; padding: 0 32px; padding-top: var(--nav-h); width: 100%; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-h); margin-bottom: 28px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); padding: 8px 16px; border-radius: 50px; opacity: 0; animation: fadeInUp 0.8s ease 0.1s forwards; }
+    .hero-eyebrow-dot { width: 6px; height: 6px; background: var(--accent-h); border-radius: 50%; animation: blink 2s ease infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .hero-headline { font-family: var(--font-display); font-size: clamp(1.9rem, 4.2vw, 3.6rem); font-weight: 800; line-height: 1.1; color: var(--white); margin-bottom: 24px; max-width: 860px; opacity: 0; animation: fadeInUp 0.9s ease 0.25s forwards; }
+    .hero-headline em { font-style: normal; color: var(--accent-h); }
+    .hero-sub { font-size: 1.1rem; line-height: 1.8; color: rgba(255,255,255,0.72); max-width: 560px; margin-bottom: 40px; font-weight: 400; opacity: 0; animation: fadeInUp 0.9s ease 0.42s forwards; }
+    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; opacity: 0; animation: fadeInUp 0.9s ease 0.56s forwards; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; opacity: 0; animation: fadeInUp 0.9s ease 0.7s forwards; }
+    .hero-tag { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); padding: 7px 14px; border-radius: 50px; transition: border-color 0.3s, color 0.3s; }
+    .hero-tag:hover { border-color: var(--accent); color: var(--accent-h); }
+    .hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeIn 1.2s ease 1.2s forwards; }
+    .hero-scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent); animation: scrollPulse 2s ease infinite; }
+    .hero-scroll-txt { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+    @keyframes scrollPulse { 0% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(0.3); opacity: 0; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ── ABOUT / INTRO ── */
+    .intro { background: var(--white); }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center; }
+    .intro-visual { position: relative; }
+    .intro-img-wrap { border-radius: 20px; overflow: hidden; position: relative; }
+    .intro-img { width: 100%; height: 500px; object-fit: cover; display: block; transition: transform 0.8s ease; }
+    .intro-img-wrap:hover .intro-img { transform: scale(1.03); }
+    .intro-badge { position: absolute; bottom: 28px; left: -24px; background: white; border: 1px solid var(--border); padding: 16px 20px; border-radius: 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 14px; }
+    .intro-badge-icon { width: 42px; height: 42px; background: var(--accent-pale); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .intro-badge-icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .intro-badge-text strong { display: block; font-size: 15px; font-weight: 700; color: var(--text); }
+    .intro-badge-text span { font-size: 12px; color: rgba(31,41,55,0.55); }
+    .intro-badge2 { position: absolute; top: 28px; right: -24px; background: var(--accent); padding: 14px 18px; border-radius: 14px; box-shadow: 0 8px 32px rgba(16,185,129,0.35); }
+    .intro-badge2 strong { display: block; font-size: 22px; font-weight: 800; color: white; font-family: var(--font-display); line-height: 1; }
+    .intro-badge2 span { font-size: 11px; color: rgba(255,255,255,0.8); }
+    .intro-para { font-size: 1rem; line-height: 1.85; color: rgba(31,41,55,0.72); margin-bottom: 18px; }
+    .intro-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .intro-pill { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--accent-pale); border: 1px solid var(--accent-border); border-radius: 50px; font-size: 13px; font-weight: 500; color: var(--text); }
+    .intro-pill svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── SERVICES ── */
+    .services { background: var(--bg); }
+    .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .svc-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px 22px; display: flex; flex-direction: column; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s; text-decoration: none; color: inherit; min-height: 230px; }
+    .svc-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), rgba(16,185,129,0.2)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease); border-radius: 3px 3px 0 0; }
+    .svc-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--accent-border); }
+    .svc-card:hover::before { transform: scaleX(1); }
+    .svc-card-icon { width: 46px; height: 46px; background: var(--accent-pale); border: 1px solid var(--accent-border); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: background 0.3s, transform 0.3s; }
+    .svc-card-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .svc-card:hover .svc-card-icon { background: rgba(16,185,129,0.18); transform: scale(1.1) rotate(-4deg); }
+    .svc-card-num { font-family: var(--font-display); font-size: 40px; font-weight: 800; color: rgba(16,185,129,0.07); line-height: 1; position: absolute; top: 14px; right: 18px; transition: color 0.3s; }
+    .svc-card:hover .svc-card-num { color: rgba(16,185,129,0.13); }
+    .svc-card-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 8px; }
+    .svc-card-desc { font-size: 0.82rem; line-height: 1.65; color: rgba(31,41,55,0.58); flex-grow: 1; }
+    .svc-card-divider { height: 1px; background: var(--border); margin: 16px 0 0; }
+    .svc-card-cta { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--accent); padding-top: 13px; background: none; border: none; font-family: var(--font-body); cursor: pointer; transition: gap 0.25s var(--ease), color 0.2s; text-decoration: none; }
+    .svc-card-cta svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.25s var(--ease); }
+    .svc-card:hover .svc-card-cta { gap: 10px; color: #059669; }
+    .svc-card:hover .svc-card-cta svg { transform: translateX(3px); }
+
+    /* ── WORKFLOW SECTION ── */
+    .workflow { position: relative; overflow: hidden; background: #0d1f17; }
+    .workflow-bg { position: absolute; inset: 0; }
+    .workflow-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.25) saturate(0.8); }
+    .workflow-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,30,20,0.92) 0%, rgba(16,185,129,0.06) 100%); }
+    .workflow .container { position: relative; z-index: 1; }
+    .workflow-pipeline { display: flex; align-items: flex-start; justify-content: center; flex-wrap: wrap; gap: 6px; padding: 48px 0 16px; }
+    .wf-step { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 8px; max-width: 100px; }
+    .wf-dot { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid var(--accent); flex-shrink: 0; position: relative; }
+    .wf-dot.active { background: var(--accent); box-shadow: 0 0 14px rgba(16,185,129,0.6); }
+    .wf-dot::before { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid rgba(16,185,129,0.25); animation: wfPulse 2.5s ease infinite; }
+    @keyframes wfPulse { 0%,100% { opacity: 1; transform: scale(1); } 60% { opacity: 0; transform: scale(1.7); } }
+    .wf-label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--white); text-align: center; line-height: 1.3; }
+    .wf-desc { font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; line-height: 1.4; }
+    .wf-arrow { font-size: 16px; color: var(--accent); opacity: 0.7; flex-shrink: 0; margin-top: 3px; }
+
+    /* ── WHY SECTION ── */
+    .why { background: var(--bg2); }
+    .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .why-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px 22px; transition: transform 0.3s var(--ease), box-shadow 0.3s; }
+    .why-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .why-icon { width: 44px; height: 44px; background: var(--accent-pale); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .why-icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .why-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .why-desc { font-size: 0.84rem; line-height: 1.7; color: rgba(31,41,55,0.62); }
+
+    /* ── PROCESS TIMELINE ── */
+    .process { background: var(--bg); }
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .proc-step { padding: 40px 32px 28px; border: 1px solid var(--border); background: var(--bg); transition: background 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; cursor: default; border-radius: 2px; }
+    .proc-step:hover { background: var(--white); box-shadow: var(--shadow); z-index: 1; }
+    .proc-num { font-family: var(--font-display); font-size: 52px; font-weight: 800; color: rgba(16,185,129,0.1); line-height: 1; margin-bottom: 18px; transition: color 0.3s; }
+    .proc-step:hover .proc-num { color: rgba(16,185,129,0.2); }
+    .proc-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .proc-desc { font-size: 0.87rem; line-height: 1.75; color: rgba(31,41,55,0.62); }
+
+    /* ── CONTACT ── */
+    .contact { position: relative; overflow: hidden; background: #0d1f17; }
+    .contact-bg { position: absolute; inset: 0; }
+    .contact-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.2); }
+    .contact-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,30,20,0.95), rgba(16,185,129,0.05)); }
+    .contact .container { position: relative; z-index: 1; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-sub { font-size: 1rem; line-height: 1.8; color: rgba(255,255,255,0.68); margin-bottom: 36px; }
+    .contact-channels { display: flex; flex-direction: column; gap: 12px; }
+    .contact-channel { display: flex; align-items: center; gap: 14px; text-decoration: none; padding: 14px 18px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; transition: border-color 0.3s, background 0.3s; }
+    .contact-channel:hover { border-color: var(--accent); background: rgba(16,185,129,0.08); }
+    .contact-channel-icon { width: 36px; height: 36px; background: rgba(16,185,129,0.15); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+    .contact-channel-icon svg { width: 17px; height: 17px; stroke: var(--accent-h); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .contact-channel strong { display: block; font-size: 13px; font-weight: 600; color: var(--white); }
+    .contact-channel span { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .contact-form-wrap { background: var(--white); border-radius: 20px; padding: 40px 36px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 0.9rem; font-weight: 400; transition: border-color 0.3s, box-shadow 0.3s; outline: none; resize: none; -webkit-appearance: none; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+    .form-status { display: none; text-align: center; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-top: 12px; }
+    .form-status.success { background: rgba(16,185,129,0.1); color: #065f46; border: 1px solid rgba(16,185,129,0.25); display: block; }
+    .form-status.error { background: rgba(239,68,68,0.09); color: #b91c1c; border: 1px solid rgba(239,68,68,0.2); display: block; }
+
+    /* ── FOOTER ── */
+    .footer { background: #0d1f17; padding: 72px 0 36px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 36px; }
+    .footer .logo-name { color: var(--white); }
+    .footer-tagline { font-size: 0.88rem; line-height: 1.75; color: rgba(255,255,255,0.42); margin-top: 16px; max-width: 260px; }
+    .footer-group strong { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 18px; }
+    .footer-group ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .footer-group a { font-size: 0.87rem; color: rgba(255,255,255,0.42); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+    .footer-group a:hover { color: var(--accent-h); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: rgba(255,255,255,0.28); letter-spacing: 0.04em; flex-wrap: wrap; gap: 12px; }
+
+    /* ── SERVICE INNER PAGE ── */
+    .sp-hero { position: relative; min-height: 62vh; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: 72px; }
+    .sp-hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .sp-hero-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.35); }
+    .sp-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,30,20,0.97) 0%, rgba(10,30,20,0.4) 65%); }
+    .sp-hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; padding: 0 32px; padding-top: var(--nav-h); width: 100%; }
+    .sp-breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 24px; margin-top: 36px; }
+    .sp-breadcrumb a { color: var(--accent-h); text-decoration: none; cursor: pointer; }
+    .sp-breadcrumb a:hover { text-decoration: underline; }
+    .sp-badge { display: inline-block; background: var(--accent); color: var(--white); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 16px; border-radius: 50px; margin-bottom: 18px; }
+    .sp-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; color: var(--white); line-height: 1.08; margin-bottom: 18px; }
+    .sp-hero h1 em { font-style: normal; color: var(--accent-h); }
+    .sp-hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.72); max-width: 620px; line-height: 1.8; margin-bottom: 28px; }
+    .sp-body { background: var(--bg); }
+    .sp-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 64px; align-items: start; padding: 72px 0; }
+    .sp-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: 16px; line-height: 1.2; }
+    .sp-title em { font-style: normal; color: var(--accent); }
+    .sp-para { font-size: 0.97rem; line-height: 1.88; color: rgba(31,41,55,0.72); margin-bottom: 18px; }
+    .sp-features { display: flex; flex-direction: column; gap: 0; margin: 28px 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .sp-feature { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 14px; transition: background 0.2s; }
+    .sp-feature:last-child { border-bottom: none; }
+    .sp-feature:hover { background: var(--bg2); }
+    .sp-feature-chk { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-pale); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .sp-feature-chk svg { width: 11px; height: 11px; stroke: var(--accent); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sp-feature-text strong { display: block; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .sp-feature-text span { font-size: 13px; color: rgba(31,41,55,0.6); line-height: 1.6; }
+    .sp-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 28px 0; }
+    .sp-result { background: var(--white); border: 1px solid var(--border); padding: 22px 18px; border-radius: 12px; text-align: center; }
+    .sp-result-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .sp-result-label { font-size: 12px; color: rgba(31,41,55,0.6); line-height: 1.5; }
+    .sp-steps { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .sp-step { display: flex; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--border); }
+    .sp-step:last-child { border-bottom: none; }
+    .sp-step-n { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: rgba(16,185,129,0.2); line-height: 1; flex-shrink: 0; width: 44px; }
+    .sp-step-content strong { display: block; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .sp-step-content span { font-size: 13px; color: rgba(31,41,55,0.65); line-height: 1.7; }
+    .sp-sidebar { position: sticky; top: calc(var(--nav-h) + 20px); display: flex; flex-direction: column; gap: 20px; }
+    .sp-cta-card { background: var(--text); padding: 32px 26px; border-radius: 16px; }
+    .sp-cta-card h3 { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; color: var(--white); margin-bottom: 12px; line-height: 1.25; }
+    .sp-cta-card p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 22px; }
+    .sp-cta-wa { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; padding: 12px; border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; margin-top: 10px; transition: border-color 0.3s, color 0.3s; }
+    .sp-cta-wa:hover { border-color: var(--accent); color: var(--accent-h); }
+    .sp-cta-wa svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .sp-info-card { background: var(--white); border: 1px solid var(--border); padding: 24px; border-radius: 14px; }
+    .sp-info-card h4 { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    .sp-info-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .sp-info-list li { font-size: 13px; color: rgba(31,41,55,0.72); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+    .sp-info-list li::before { content: '→'; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+    .sp-more { background: var(--bg2); padding: 72px 0; }
+    .sp-more h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 36px; }
+    .sp-more h2 em { font-style: normal; color: var(--accent); }
+    .sp-more-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .services-grid { grid-template-columns: repeat(3, 1fr); }
+      .why-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 860px) {
+      .section-pad { padding: 80px 0; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .intro-grid { grid-template-columns: 1fr; gap: 48px; }
+      .intro-badge { left: 0; }
+      .intro-badge2 { right: 0; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .sp-grid { grid-template-columns: 1fr; }
+      .sp-sidebar { position: static; }
+      .sp-more-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0 20px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      .process-grid { grid-template-columns: 1fr; }
+      .sp-results { grid-template-columns: 1fr 1fr; }
+      .sp-more-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-nav { display: flex; }
+      .hero-headline { font-size: clamp(1.7rem, 8vw, 2.6rem); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="nav-logo" onclick="goHome()">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="logo-name">Edu<span>Automate</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a class="nav-link" onclick="goHome('services')">Services</a></li>
+      <li><a class="nav-link" onclick="goHome('workflow')">Workflow</a></li>
+      <li><a class="nav-link" onclick="goHome('why')">Why Automate</a></li>
+      <li><a class="nav-link" onclick="goHome('process')">Process</a></li>
+      <li><a class="nav-link nav-cta" onclick="goHome('contact')">Book Consultation</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<nav class="mobile-nav" id="mobileNav">
+  <a onclick="goHome('services');closeMobile()">Services</a>
+  <a onclick="goHome('workflow');closeMobile()">Workflow</a>
+  <a onclick="goHome('why');closeMobile()">Why Automate</a>
+  <a onclick="goHome('process');closeMobile()">Process</a>
+  <a onclick="goHome('contact');closeMobile()">Book Consultation</a>
+</nav>
+
+<!-- MAIN PAGE -->
+<div id="page-main">
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1800&q=80" alt="Students in modern classroom" class="hero-img" />
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-dots"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div> AI Automation for Education</div>
+      <h1 class="hero-headline">AI Automation Systems For<br><em>Coaching Institutes</em></h1>
+      <p class="hero-sub">Helping coaching institutes automate admissions, student communication, fee collection, CRM systems, follow-ups, and online learning operations — so you focus on teaching, not administration.</p>
+      <div class="hero-buttons">
+        <a class="btn-primary" onclick="goHome('services')">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Explore Solutions
+        </a>
+        <a class="btn-outline" onclick="goHome('contact')">Book Consultation</a>
+      </div>
+      <div class="hero-tags">
+        <span class="hero-tag">IELTS Institutes</span>
+        <span class="hero-tag">Computer Training</span>
+        <span class="hero-tag">Skill Development</span>
+        <span class="hero-tag">Coaching Classes</span>
+        <span class="hero-tag">Spoken English</span>
+        <span class="hero-tag">Online Academies</span>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span class="hero-scroll-txt">Scroll</span>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="intro section-pad" id="about">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-visual reveal-fade">
+          <div class="intro-img-wrap">
+            <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=900&q=80" alt="Modern coaching center" class="intro-img" />
+          </div>
+          <div class="intro-badge">
+            <div class="intro-badge-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="intro-badge-text"><strong>500+ Institutes</strong><span>Automated across India</span></div>
+          </div>
+          <div class="intro-badge2"><strong>3×</strong><span>More Admissions</span></div>
+        </div>
+        <div class="intro-text reveal-up d1">
+          <div class="section-label">About EduAutomate</div>
+          <h2 class="section-heading">The Operating System for <em>Modern Institutes</em></h2>
+          <p class="intro-para">Most coaching institutes still run admissions on WhatsApp chats, Excel sheets, and missed calls. Every day, student inquiries go cold, fees get delayed, and follow-ups never happen — not because of poor intent, but because there's no system.</p>
+          <p class="intro-para">EduAutomate builds intelligent automation systems tailored for coaching institutes, training centers, and educational businesses. From the first student inquiry to the final certificate — your entire operation runs on autopilot.</p>
+          <div class="intro-pills">
+            <div class="intro-pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Zero leads lost</div>
+            <div class="intro-pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Automated follow-ups</div>
+            <div class="intro-pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Real-time dashboards</div>
+            <div class="intro-pill"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>AI-powered CRM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services section-pad" id="services">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label reveal-fade">Our Solutions</div>
+        <h2 class="section-heading reveal-up">8 Automation Systems That <em>Transform Institutes</em></h2>
+        <p class="section-sub reveal-up d1">Each system is designed to eliminate a specific operational bottleneck and directly increase your institute's enrollment and revenue.</p>
+      </div>
+      <div class="services-grid" id="servicesGrid"></div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="workflow section-pad" id="workflow">
+    <div class="workflow-bg">
+      <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600&q=80" alt="Education technology" />
+      <div class="workflow-overlay"></div>
+    </div>
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label light reveal-fade">Automation Flow</div>
+        <h2 class="section-heading light reveal-up">The System That Works <em>While You Teach</em></h2>
+        <p class="section-sub light reveal-up d1">A fully connected end-to-end pipeline — from the first student inquiry to the admission dashboard report.</p>
+      </div>
+      <div class="workflow-pipeline reveal-up d2">
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">Lead Capture</div><div class="wf-desc">Ads, WhatsApp, Web</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">CRM Entry</div><div class="wf-desc">Auto-tagged</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">AI Qualifier</div><div class="wf-desc">Bot + scoring</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">WhatsApp Nurture</div><div class="wf-desc">Auto-sequence</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">Counseling</div><div class="wf-desc">Warm handoff</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">Demo Booking</div><div class="wf-desc">Calendar auto</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">Admission</div><div class="wf-desc">Confirmed</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot"></div><div class="wf-label">Fee Collection</div><div class="wf-desc">Auto reminders</div></div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step"><div class="wf-dot active"></div><div class="wf-label">Dashboard</div><div class="wf-desc">Live reporting</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="why section-pad" id="why">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label reveal-fade">Why Automate</div>
+        <h2 class="section-heading reveal-up">Every Hour Without Automation is <em>Revenue Lost</em></h2>
+        <p class="section-sub reveal-up d1">Manual operations are the #1 reason good institutes fail to scale. Here's what automation fixes.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal-card d1">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <div class="why-title">Faster Admissions</div>
+          <div class="why-desc">Reduce admission processing from days to hours. Every inquiry is captured, qualified, and followed up automatically — no manual work required.</div>
+        </div>
+        <div class="why-card reveal-card d2">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+          <div class="why-title">Smarter Communication</div>
+          <div class="why-desc">AI WhatsApp bots respond instantly at 2AM. No inquiry waits. Every student gets a personalized reply within seconds of reaching out.</div>
+        </div>
+        <div class="why-card reveal-card d3">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div class="why-title">Organized Operations</div>
+          <div class="why-desc">Replace scattered Excel sheets and WhatsApp threads with a centralized CRM. Every student's journey tracked from inquiry to certification.</div>
+        </div>
+        <div class="why-card reveal-card d4">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="why-title">Higher Fee Collection</div>
+          <div class="why-desc">Automated WhatsApp reminders, payment links, and receipts. Reduce fee defaulters by 60% without a single phone call from your staff.</div>
+        </div>
+        <div class="why-card reveal-card d1">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="why-title">Better Student Retention</div>
+          <div class="why-desc">Track attendance, test scores, and engagement. Auto-alert parents and counselors before a student drops out — intervene at the right moment.</div>
+        </div>
+        <div class="why-card reveal-card d2">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/></svg></div>
+          <div class="why-title">Online Learning Revenue</div>
+          <div class="why-desc">Launch a portal with recorded lectures, mock tests, and certifications. Generate passive income from your existing course content.</div>
+        </div>
+        <div class="why-card reveal-card d3">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+          <div class="why-title">Power BI Dashboards</div>
+          <div class="why-desc">See admissions, revenue, counselor performance, and lead sources on one live screen. Make decisions backed by data, not gut feeling.</div>
+        </div>
+        <div class="why-card reveal-card d4">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="why-title">Referral Engine</div>
+          <div class="why-desc">Turn your existing students into your best marketers. Automated referral tracking, reward distribution, and analytics — fully hands-off.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process section-pad" id="process">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label reveal-fade">How We Work</div>
+        <h2 class="section-heading reveal-up">A Structured Path From <em>Inquiry to Launch</em></h2>
+        <p class="section-sub reveal-up d1">Every automation system we build follows a proven 9-step deployment process — nothing is rushed, nothing is guessed.</p>
+      </div>
+      <div class="process-grid" id="processGrid"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact section-pad" id="contact">
+    <div class="contact-bg">
+      <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1600&q=80" alt="Students learning" />
+      <div class="contact-overlay"></div>
+    </div>
+    <div class="container">
+      <div class="contact-grid">
+        <div class="reveal-up">
+          <div class="section-label light">Get In Touch</div>
+          <h2 class="section-heading light">Let's Build an Automation System for Your <em>Institute</em></h2>
+          <p class="contact-sub">Whether you run a 50-student coaching class or a network of training centers across cities — the right automation system changes everything. Let's find out where to start.</p>
+          <div class="contact-channels">
+            <a href="mailto:hello@eduautomate.in" class="contact-channel">
+              <div class="contact-channel-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div><strong>Email</strong><span>hello@eduautomate.in</span></div>
+            </a>
+            <a href="https://wa.me/919876543210" class="contact-channel" target="_blank">
+              <div class="contact-channel-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+              <div><strong>WhatsApp</strong><span>+91 98765 43210</span></div>
+            </a>
+            <a href="https://linkedin.com/company/eduautomate" class="contact-channel" target="_blank">
+              <div class="contact-channel-icon"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+              <div><strong>LinkedIn</strong><span>linkedin.com/company/eduautomate</span></div>
+            </a>
+          </div>
+        </div>
+        <div class="contact-form-wrap reveal-up d1">
+          <h3 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:24px;">Schedule a Free Consultation</h3>
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group"><label>Full Name</label><input type="text" id="cName" placeholder="Your name" required /></div>
+              <div class="form-group"><label>Institute Name</label><input type="text" id="cInstitute" placeholder="Your institute" required /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="cPhone" placeholder="+91 00000 00000" required /></div>
+              <div class="form-group"><label>Email Address</label><input type="email" id="cEmail" placeholder="you@institute.com" /></div>
+            </div>
+            <div class="form-group"><label>Interested Service</label>
+              <select id="cService">
+                <option value="">Select a service...</option>
+                <option>Admission Lead Generation System</option>
+                <option>AI WhatsApp Admission Assistant</option>
+                <option>Automated Lead Follow-Up</option>
+                <option>Demo Class Booking System</option>
+                <option>Student CRM System</option>
+                <option>Fee Collection Automation</option>
+                <option>Student Performance Dashboard</option>
+                <option>Online Learning Portal</option>
+                <option>Complete Automation Suite</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Current Challenges</label><textarea id="cChallenge" rows="3" placeholder="Describe your biggest operational challenge — where are leads getting lost, what's manual, what's broken?"></textarea></div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <button type="submit" class="btn-primary full" id="submitBtn">Schedule Consultation</button>
+              <a href="https://wa.me/919876543210" class="btn-outline dark full" target="_blank" style="justify-content:center;">
+                <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Chat on WhatsApp
+              </a>
+            </div>
+            <div class="form-status" id="formStatus"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="nav-logo" onclick="goHome()" style="display:inline-flex;">
+            <div class="logo-icon"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <span class="logo-name">Edu<span style="color:var(--accent)">Automate</span></span>
+          </a>
+          <p class="footer-tagline">AI automation systems for coaching institutes, training centers, and educational businesses across India.</p>
+        </div>
+        <div class="footer-group">
+          <strong>Navigation</strong>
+          <ul>
+            <li><a onclick="goHome('about')">About</a></li>
+            <li><a onclick="goHome('services')">Services</a></li>
+            <li><a onclick="goHome('workflow')">Workflow</a></li>
+            <li><a onclick="goHome('process')">Process</a></li>
+            <li><a onclick="goHome('contact')">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-group">
+          <strong>Solutions</strong>
+          <ul>
+            <li><a onclick="showService('lead-gen')">Lead Generation</a></li>
+            <li><a onclick="showService('whatsapp-ai')">WhatsApp AI</a></li>
+            <li><a onclick="showService('crm')">Student CRM</a></li>
+            <li><a onclick="showService('fee')">Fee Automation</a></li>
+            <li><a onclick="showService('performance')">Performance Dashboard</a></li>
+            <li><a onclick="showService('portal')">Online Portal</a></li>
+          </ul>
+        </div>
+        <div class="footer-group">
+          <strong>Connect</strong>
+          <ul>
+            <li><a href="mailto:hello@eduautomate.in">Email Us</a></li>
+            <li><a href="https://wa.me/919876543210" target="_blank">WhatsApp</a></li>
+            <li><a href="https://linkedin.com/company/eduautomate" target="_blank">LinkedIn</a></li>
+            <li><a onclick="goHome('contact')">Book a Call</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 EduAutomate. All rights reserved.</span>
+        <span>AI Automation · CRM · WhatsApp · Power BI · Ed-Tech</span>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /page-main -->
+
+<!-- SERVICE INNER PAGE -->
+<div id="page-service"></div>
+
+<script>
+var ARROW='<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+var CHECK='<svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+var SERVICES = {
+  'lead-gen': {
+    badge:'Admission Systems',
+    title:'Admission Lead <em>Generation System</em>',
+    sub:'A complete digital funnel that captures student inquiries from every channel — Meta Ads, Google, WhatsApp, and your website — and feeds them directly into your CRM, automatically.',
+    img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80',
+    desc1:'Most institutes spend money on ads but lose leads because there is no system to catch and nurture them. A student submits a form at 11PM, no one follows up until Monday morning — by then, they have joined a competitor. Lead generation without automation is marketing money thrown away.',
+    desc2:'We build fully automated admission funnels: course-specific landing pages, Meta and Google ad integrations, WhatsApp lead forms, and intelligent routing that puts every inquiry into your CRM within 30 seconds — no matter the time of day.',
+    features:[
+      {title:'Course-Specific Landing Pages',desc:'High-converting pages for each course — IELTS, Computer Training, Spoken English — with enrollment forms connected to your CRM.'},
+      {title:'Meta & Google Ads Integration',desc:'Lead forms from Facebook, Instagram, and Google Ads connected directly to your system via API — zero manual imports, zero lag.'},
+      {title:'Student Inquiry Capture',desc:'Every inquiry from website, WhatsApp, call, and walk-in captured in one system with source attribution at the campaign level.'},
+      {title:'Lead Funnel Automation',desc:'Leads auto-tagged by course, source, and quality score — then dropped into the right nurture sequence automatically.'},
+      {title:'Admission Workflow Triggers',desc:'When a lead fills a form, they receive a welcome WhatsApp, brochure, fee structure, and demo booking link within 60 seconds.'},
+      {title:'Multi-Source Lead Consolidation',desc:'All lead sources — online and offline — unified in one dashboard so nothing falls through the cracks.'}
+    ],
+    results:[{num:'3×',label:'More inquiries converted to admissions'},{num:'30s',label:'Lead-to-CRM time after form submission'},{num:'60%',label:'Reduction in cold leads from slow response'}],
+    steps:[
+      {title:'Funnel Strategy & Mapping',desc:'We map your courses, target students, and admission journey to design the right funnel structure for your institute.'},
+      {title:'Landing Page Build & Ad Setup',desc:'Course pages designed, published, and connected to your ad accounts. All lead forms wired to CRM via API.'},
+      {title:'Automation & Sequence Setup',desc:'Welcome messages, brochure sends, and follow-up sequences configured and tested end-to-end.'},
+      {title:'Launch & Optimize',desc:'Campaigns go live. Weekly performance reviews and conversion rate improvements based on real data.'}
+    ],
+    info:['Meta & Google Ads setup','Custom landing pages included','CRM integration included','WhatsApp auto-response','2-week implementation']
+  },
+  'whatsapp-ai': {
+    badge:'AI Communication',
+    title:'AI WhatsApp <em>Admission Assistant</em>',
+    sub:'An intelligent WhatsApp bot that responds to every student inquiry instantly — sharing brochures, fee structures, demo booking links, and course details — 24 hours a day, 7 days a week.',
+    img:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&q=80',
+    desc1:'A student sends a WhatsApp message at 11PM asking about your IELTS batch. With no automation, they wait until morning and may have already called two competitors. With an AI WhatsApp Assistant, they receive a personalized reply in under 30 seconds — course details, batch timings, fee structure, brochure — everything they need to say yes.',
+    desc2:'Built on the official WhatsApp Business API, our AI Admission Assistant handles 80% of pre-enrollment conversations without any human involvement. It qualifies leads, books demo classes, shares fee structures, and escalates only when a student is ready to enroll. Every conversation is logged to your CRM automatically.',
+    features:[
+      {title:'AI Chatbot with NLP',desc:'Natural language responses trained on your institute\'s details, FAQs, course info, and pricing — sounds human, not robotic.'},
+      {title:'Instant Brochure & Fee Sharing',desc:'Student requests a course — bot sends the brochure, batch schedule, fee structure, and EMI options within seconds.'},
+      {title:'Automated Lead Qualification',desc:'Asks the right questions about course interest, timing, budget, and previous qualification — scores and routes automatically.'},
+      {title:'Demo Class Booking',desc:'AI bot checks available demo slots and books the student directly in your calendar — sends confirmation to both parties.'},
+      {title:'Counseling Escalation',desc:'Smart handoff to human counselors with full chat context — only when the student signals intent to enroll.'},
+      {title:'CRM Auto-Sync',desc:'Every message, qualification answer, and booking logged to the lead record in real time — no manual updates needed.'}
+    ],
+    results:[{num:'80%',label:'Conversations handled without human involvement'},{num:'30s',label:'Average first response time, any hour'},{num:'2×',label:'More demo bookings from instant engagement'}],
+    steps:[
+      {title:'Conversation Flow Design',desc:'We map your most common student questions and design response flows for each course and inquiry type.'},
+      {title:'Bot Build & Training',desc:'Chatbot configured with your institute\'s data — courses, fees, timings, FAQs — and tested with real scenarios.'},
+      {title:'WhatsApp API Setup',desc:'Official Business API connected, number verified, bot deployed and integrated with your CRM.'},
+      {title:'Go Live & Monitor',desc:'Live launch with 30-day monitoring — conversation quality reviewed and bot updated based on real interactions.'}
+    ],
+    info:['Official WhatsApp Business API','Multi-course bot support','CRM integration included','Brochure & fee auto-send','1-week go-live time']
+  },
+  'follow-up': {
+    badge:'Lead Nurturing',
+    title:'Automated Lead <em>Follow-Up System</em>',
+    sub:'A multi-touch follow-up sequence that keeps your institute top-of-mind for every prospective student — through WhatsApp, email, and SMS — until they admit or opt out.',
+    img:'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1400&q=80',
+    desc1:'The average coaching institute follows up with a lead once or twice before giving up. But most students decide within 7-21 days of first inquiry. The institutes that win are those that stay present — through consistent, relevant, and non-annoying follow-up — across the entire decision window.',
+    desc2:'Our automated follow-up system delivers a structured multi-step sequence via WhatsApp and email: value messages, success stories, course highlights, limited-time offers, and demo class reminders — spread intelligently across 15-21 days. Every touch is personalized, every reply is logged, and every conversion is tracked.',
+    features:[
+      {title:'WhatsApp Follow-Up Sequences',desc:'Pre-built 7 to 21-day WhatsApp sequences with course-specific messaging — sent at optimal open-rate times.'},
+      {title:'Email Nurture Campaigns',desc:'Parallel email sequences with course highlights, student success stories, and batch-start deadline reminders.'},
+      {title:'Demo Reminder Automation',desc:'Booked a demo? Automated reminder 24 hours and 1 hour before — with directions, timing, and counselor details.'},
+      {title:'Admission Deadline Urgency',desc:'Last 3 seats, batch starting soon — automated urgency messages triggered based on CRM stage and timing.'},
+      {title:'Smart Unsubscribe Handling',desc:'Leads that opt out are automatically removed. No spam, no compliance issues, no burned numbers.'},
+      {title:'Re-engagement Sequences',desc:'Cold leads who went silent for 30+ days get a re-engagement sequence — a fresh angle, new batch info, or special offer.'}
+    ],
+    results:[{num:'45%',label:'Improvement in lead-to-enrollment conversion rate'},{num:'3×',label:'More admissions from existing lead database'},{num:'0',label:'Manual follow-up calls needed from your team'}],
+    steps:[
+      {title:'Lead Stage Mapping',desc:'We map every lead stage in your pipeline and design the right follow-up sequence for each stage.'},
+      {title:'Content & Sequence Build',desc:'All WhatsApp and email messages written, sequenced, and loaded into the automation platform.'},
+      {title:'CRM Trigger Setup',desc:'Each sequence triggered by CRM stage changes — no manual launching, fully automatic.'},
+      {title:'Analytics & Optimisation',desc:'Monthly review of open rates, reply rates, and conversion data — sequences updated based on performance.'}
+    ],
+    info:['WhatsApp + Email sequences','Course-specific messaging','CRM-triggered automation','Unsubscribe management','Analytics dashboard included']
+  },
+  'demo': {
+    badge:'Class Booking',
+    title:'Demo Class <em>Booking System</em>',
+    sub:'A frictionless online booking system that lets prospective students schedule their demo class in under 60 seconds — with automatic confirmations, reminders, and attendance tracking.',
+    img:'https://images.unsplash.com/photo-1605711285791-0219e80e43a3?w=1400&q=80',
+    desc1:'Demo classes are the most powerful conversion tool in education — a student who attends a demo is 5× more likely to enroll. But most institutes still book demos through back-and-forth WhatsApp messages and phone calls, losing students who lose patience before the booking is confirmed.',
+    desc2:'Our Demo Class Booking System gives every prospective student a real-time calendar of available demo slots. They pick a time, receive an instant confirmation on WhatsApp, get reminders 24 hours and 1 hour before, and their attendance is tracked automatically. Your counselors never need to call to confirm a demo again.',
+    features:[
+      {title:'Online Self-Booking Calendar',desc:'Real-time availability calendar for each course and batch — students book instantly without WhatsApp back-and-forth.'},
+      {title:'Instant WhatsApp Confirmation',desc:'Booking confirmed with class details, location or Zoom link, and counselor contact — sent immediately after booking.'},
+      {title:'Automated Reminder Sequence',desc:'24-hour and 1-hour WhatsApp reminders reduce no-shows by 55%. Both student and counselor notified.'},
+      {title:'Calendar Integration',desc:'Bookings synced to Google Calendar or Outlook — counselors see their demo schedule in real time.'},
+      {title:'Attendance Tracking',desc:'Demo attendance marked and synced to CRM — triggers next follow-up sequence based on attendance or no-show.'},
+      {title:'Capacity Management',desc:'Set maximum students per demo. Booking closes automatically when capacity is reached — no overbooking.'}
+    ],
+    results:[{num:'55%',label:'Fewer demo no-shows with automated reminders'},{num:'5×',label:'Higher enrollment rate from demo attendees'},{num:'0',label:'Manual phone calls to confirm demo bookings'}],
+    steps:[
+      {title:'Booking Flow Design',desc:'We design the booking experience for each of your courses — session types, capacity, and confirmation flow.'},
+      {title:'Calendar & Integration Setup',desc:'Booking system built and integrated with your calendar tool and CRM.'},
+      {title:'Reminder Automation',desc:'WhatsApp reminder sequences configured, tested with real demo scenarios.'},
+      {title:'Staff Training & Launch',desc:'Your counselors trained on managing bookings and reading the attendance dashboard.'}
+    ],
+    info:['Google Calendar integration','WhatsApp confirmations & reminders','CRM attendance sync','Course-wise booking pages','1-week implementation']
+  },
+  'crm': {
+    badge:'CRM Systems',
+    title:'Student <em>CRM System</em>',
+    sub:'A centralized student management system that tracks every inquiry, follow-up, admission, fee record, and communication in one place — so no lead is ever lost and no student is ever forgotten.',
+    img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80',
+    desc1:'Without a CRM, your institute runs on memory and WhatsApp groups. Inquiries get missed, follow-ups are forgotten, fee records live in three different Excel sheets, and when a counselor leaves, you lose everything they knew. A CRM is not a luxury — it\'s the foundation every growing institute needs.',
+    desc2:'We build and configure a Student CRM tailored to your institute\'s process — from first inquiry through enrollment, fee collection, course completion, and referral. Every student interaction is logged, every stage is tracked, and every counselor knows exactly what to do next — the system tells them.',
+    features:[
+      {title:'Inquiry & Lead Database',desc:'Every student inquiry from every source — ads, walk-in, WhatsApp, referral — in one searchable, filterable database.'},
+      {title:'Admission Pipeline Tracking',desc:'Visual pipeline showing every lead\'s stage: Inquiry → Contacted → Demo → Enrolled → Fee Paid → Active Student.'},
+      {title:'Counselor Assignment & Routing',desc:'Leads assigned to the right counselor based on course, batch, or round-robin rules — automatically.'},
+      {title:'Follow-Up Task Automation',desc:'Overdue follow-up reminders, escalation alerts, and daily counselor task lists generated automatically.'},
+      {title:'Fee Records & Payment History',desc:'Every fee installment, payment date, due amount, and receipt linked to the student\'s CRM record.'},
+      {title:'Communication Log',desc:'Every WhatsApp, call, and email logged automatically — counselors always have full context before calling.'}
+    ],
+    results:[{num:'0',label:'Leads lost due to missing follow-up or assignment'},{num:'3×',label:'Faster counselor onboarding with structured CRM'},{num:'100%',label:'Student communication history accessible to all staff'}],
+    steps:[
+      {title:'Institute Workflow Audit',desc:'We map your current admission and student management process — all the good parts and the broken ones.'},
+      {title:'CRM Configuration',desc:'Custom pipelines, fields, user roles, and permissions built to match your exact process — nothing generic.'},
+      {title:'Integration & Data Migration',desc:'Connected to your lead sources, WhatsApp, and existing student data migrated cleanly.'},
+      {title:'Training & Go-Live',desc:'Full team training session. Ongoing support for the first 30 days after launch.'}
+    ],
+    info:['Zoho / HubSpot / custom CRM','Full data migration included','WhatsApp + Ads integration','Team training included','Ongoing support available']
+  },
+  'fee': {
+    badge:'Fee Management',
+    title:'Fee Collection <em>Automation System</em>',
+    sub:'An automated fee reminder and payment system that reduces defaulters, speeds up collections, and handles receipts — all through WhatsApp — without your admin team making a single call.',
+    img:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80',
+    desc1:'Fee collection is the most painful part of running a coaching institute. Chasing students and parents over phone calls takes hours every week. Reminders get forgotten. Payments get delayed. And at the end of the month, your cash flow is unpredictable. This is entirely solvable with the right automation.',
+    desc2:'Our Fee Collection Automation system sends scheduled WhatsApp reminders with payment links before the due date, escalating reminders on the due date, and overdue alerts after. Payments made online generate instant receipts. Your admin team sees the real-time collection dashboard — and stops making reminder calls entirely.',
+    features:[
+      {title:'Automated WhatsApp Reminders',desc:'Reminders sent 7 days, 3 days, and 1 day before due date — with a one-click payment link included in the message.'},
+      {title:'Online Payment Integration',desc:'Razorpay, PayU, or UPI payment links sent directly via WhatsApp — students pay in under 30 seconds.'},
+      {title:'Instant Auto-Receipts',desc:'Payment confirmed → receipt generated and sent to student and parent on WhatsApp instantly — no admin work.'},
+      {title:'Overdue Escalation',desc:'Overdue fees trigger escalating reminders and auto-alert your admin team when a payment is 7+ days late.'},
+      {title:'Installment Management',desc:'Multi-installment fee structures managed automatically — each installment reminds and collects independently.'},
+      {title:'Collection Dashboard',desc:'Real-time view of total collected, pending, overdue, and upcoming fee — by batch, course, or individual student.'}
+    ],
+    results:[{num:'60%',label:'Reduction in fee defaulters after automation'},{num:'3×',label:'Faster monthly fee collection cycle'},{num:'0',label:'Admin hours spent on reminder calls per week'}],
+    steps:[
+      {title:'Fee Structure Mapping',desc:'We document your fee structures, installment plans, and due date logic for each course.'},
+      {title:'Payment Gateway Setup',desc:'Razorpay or UPI integrated and tested with real transactions. Receipt templates designed.'},
+      {title:'Reminder Sequence Build',desc:'All WhatsApp reminders configured and tested — pre-due, due-date, and overdue sequences.'},
+      {title:'Dashboard & Launch',desc:'Collection dashboard built and connected. Your team trained and system goes live.'}
+    ],
+    info:['Razorpay / UPI integration','WhatsApp reminder automation','Auto-receipt generation','Overdue escalation alerts','Real-time collection dashboard']
+  },
+  'performance': {
+    badge:'Student Management',
+    title:'Student Performance <em>Dashboard</em>',
+    sub:'A real-time student progress system that tracks attendance, test scores, and engagement — and automatically alerts parents and counselors before a student disengages or drops out.',
+    img:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&q=80',
+    desc1:'Student retention is where institutes lose the most revenue. A student who drops out halfway through a course is a refund request, a negative review, and a lost referral. The problem is that by the time you notice a student is disengaging, it\'s often too late to fix it.',
+    desc2:'Our Student Performance Dashboard gives you early warning signals. Attendance drops below 80%? Parent gets a WhatsApp message. Test score drops two consecutive weeks? Counselor gets alerted. Student hasn\'t logged into the portal for 7 days? Engagement sequence kicks off. You\'re intervening before problems become dropouts.',
+    features:[
+      {title:'Real-Time Attendance Tracking',desc:'Attendance marked per session and synced to student profiles — trend alerts trigger at 80%, 70%, and 60% thresholds.'},
+      {title:'Test Score Analytics',desc:'Test results entered once — individual and batch performance dashboards generated automatically.'},
+      {title:'Parent Communication Portal',desc:'Parents receive WhatsApp reports on attendance, test scores, and upcoming sessions — no parent app needed.'},
+      {title:'Counselor Alert System',desc:'Automatic alerts when a student misses 3+ consecutive sessions or scores below the class average.'},
+      {title:'Progress Reports',desc:'Automated PDF progress reports generated and sent to students and parents at configurable intervals.'},
+      {title:'Batch Performance View',desc:'Teachers and managers see batch-level performance — identify weak areas, compare batches, adjust curriculum.'}
+    ],
+    results:[{num:'35%',label:'Improvement in student retention after alert system'},{num:'90%',label:'Parent engagement rate via WhatsApp reports'},{num:'2×',label:'Faster identification of at-risk students'}],
+    steps:[
+      {title:'Attendance & Test Data Setup',desc:'We configure how attendance and test scores are entered — optimizing for minimum teacher effort.'},
+      {title:'Alert & Threshold Config',desc:'Attendance and performance thresholds set, alert sequences built for students, parents, and counselors.'},
+      {title:'Parent Communication Setup',desc:'WhatsApp report sequences for parents configured and tested with real student data.'},
+      {title:'Dashboard Build & Launch',desc:'Performance dashboards deployed. Teachers and managers trained on usage.'}
+    ],
+    info:['WhatsApp parent alerts','Attendance + test tracking','Progress report automation','Counselor alert system','Batch performance analytics']
+  },
+  'portal': {
+    badge:'Online Learning',
+    title:'Online Learning <em>Portal</em>',
+    sub:'A branded online learning portal where your students access recorded lectures, mock tests, study materials, and certificates — creating a new revenue stream and extending your institute\'s reach beyond geography.',
+    img:'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1400&q=80',
+    desc1:'Your institute\'s knowledge doesn\'t have to be limited to the students who can physically attend your classes. An online portal lets you reach students across cities, offer recorded courses, and generate revenue even when your classrooms are empty. It\'s the highest-margin product any education business can build.',
+    desc2:'We build you a fully branded online learning portal — not a basic video upload site, but a real learning management system with structured courses, progress tracking, mock test engines, completion certificates, and WhatsApp-based student communication. Your online courses work 24/7. So does your revenue.',
+    features:[
+      {title:'Recorded Lecture Library',desc:'Upload once, deliver always. Video courses organized by subject, batch, or level with mobile-friendly streaming.'},
+      {title:'Mock Test Engine',desc:'Timed tests with automated scoring, answer review, and performance analytics for students and teachers.'},
+      {title:'Study Material Repository',desc:'PDFs, notes, practice sheets, and resources organized by course — downloadable by enrolled students only.'},
+      {title:'Digital Certification',desc:'Course completion triggers automatic certificate generation — branded, downloadable, shareable on LinkedIn.'},
+      {title:'Progress Tracking',desc:'Students see their course completion %, test averages, and learning streaks. Teachers see cohort-level analytics.'},
+      {title:'WhatsApp Course Notifications',desc:'New lecture uploaded, test scheduled, deadline approaching — students notified on WhatsApp automatically.'}
+    ],
+    results:[{num:'₹',label:'New online revenue stream from existing course content'},{num:'24/7',label:'Course access for students across India and abroad'},{num:'0',label:'Additional staff needed to run the online portal'}],
+    steps:[
+      {title:'Course Structure Planning',desc:'We map your courses into online-ready modules — deciding what to record, structure, and sequence.'},
+      {title:'Portal Build & Branding',desc:'Learning portal built with your branding, configured for your course catalog.'},
+      {title:'Content Upload & Test Setup',desc:'Your lectures uploaded, courses structured, mock tests configured and tested.'},
+      {title:'Student Onboarding & Launch',desc:'Payment gateway connected, enrollment flow live, existing students migrated to online access.'}
+    ],
+    info:['Branded learning portal','Mock test engine included','Digital certificate generation','WhatsApp notifications','Payment gateway integration']
+  }
+};
+
+// 8 services — referral and dashboard cards removed
+var SERVICE_KEYS = ['lead-gen','whatsapp-ai','follow-up','demo','crm','fee','performance','portal'];
+var SERVICE_ICONS = [
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+  '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
+];
+var SERVICE_TITLES = ['Admission Lead Generation','AI WhatsApp Assistant','Automated Lead Follow-Up','Demo Class Booking','Student CRM System','Fee Collection Automation','Student Performance','Online Learning Portal'];
+var SERVICE_DESCS = ['Capture inquiries from Meta Ads, Google, and WhatsApp — all flowing into your CRM within 30 seconds.','An AI bot that responds to student inquiries instantly, shares brochures, and books demo classes — 24/7.','Multi-touch WhatsApp and email sequences that nurture cold leads until they admit or opt out.','Let students book their own demo class online — with auto-confirmations and reminders that eliminate no-shows.','One centralized system for every inquiry, follow-up, admission, fee record, and student communication.','Automated WhatsApp reminders, payment links, and instant receipts that cut fee defaulters by 60%.','Track attendance, test scores, and engagement — with parent alerts and early dropout detection.','Branded portal with recorded lectures, mock tests, certifications, and a new online revenue stream.'];
+
+// Build services grid
+(function() {
+  var grid = document.getElementById('servicesGrid');
+  var html = '';
+  SERVICE_KEYS.forEach(function(key, i) {
+    html += '<div class="svc-card reveal-card" style="transition-delay:'+(i%4*0.08)+'s" onclick="showService(\''+key+'\')">'+
+      '<div class="svc-card-icon">'+SERVICE_ICONS[i]+'</div>'+
+      '<div class="svc-card-num">'+(i+1 < 10 ? '0'+(i+1) : i+1)+'</div>'+
+      '<div class="svc-card-title">'+SERVICE_TITLES[i]+'</div>'+
+      '<div class="svc-card-desc">'+SERVICE_DESCS[i]+'</div>'+
+      '<div class="svc-card-divider"></div>'+
+      '<button class="svc-card-cta" onclick="event.stopPropagation();showService(\''+key+'\')">Explore System '+ARROW+'</button>'+
+    '</div>';
+  });
+  grid.innerHTML = html;
+})();
+
+// Build process timeline
+(function() {
+  var steps = [
+    {n:'01',t:'Discovery',d:'We learn how your institute currently operates — admission process, lead sources, communication tools, and the biggest operational pain points.'},
+    {n:'02',t:'Strategy Design',d:'We define exactly which automations to build, in what order, and what outcomes to target based on your institute\'s size and goals.'},
+    {n:'03',t:'Funnel Design',d:'Landing pages, lead forms, and conversion funnels designed and optimized for your courses and target student profile.'},
+    {n:'04',t:'CRM Setup',d:'Your student CRM built from scratch — custom pipelines, fields, user roles, and automation rules engineered for your process.'},
+    {n:'05',t:'Automation Build',d:'All WhatsApp, email, fee, and operational automations built, connected, and tested individually before system integration.'},
+    {n:'06',t:'Dashboard Integration',d:'Power BI dashboards connected to all live data sources — CRM, ads, fee system — with real-time refresh configured.'},
+    {n:'07',t:'End-to-End Testing',d:'Every automation tested with real-world scenarios, including edge cases. Your team participates in UAT before launch.'},
+    {n:'08',t:'Deployment',d:'System goes live on a phased schedule. Staff trained, documentation delivered, and a dedicated support contact assigned.'},
+    {n:'09',t:'Optimisation',d:'30 and 60-day reviews with data-backed improvements — conversion rates, message timing, and system performance continuously refined.'}
+  ];
+  var grid = document.getElementById('processGrid');
+  grid.innerHTML = steps.map(function(s) {
+    return '<div class="proc-step reveal-card">'+
+      '<div class="proc-num">'+s.n+'</div>'+
+      '<div class="proc-title">'+s.t+'</div>'+
+      '<div class="proc-desc">'+s.d+'</div>'+
+    '</div>';
+  }).join('');
+})();
+
+function showService(id) {
+  var s = SERVICES[id];
+  if (!s) return;
+
+  var featuresHtml = s.features.map(function(f) {
+    return '<div class="sp-feature">'+
+      '<div class="sp-feature-chk">'+CHECK+'</div>'+
+      '<div class="sp-feature-text"><strong>'+f.title+'</strong><span>'+f.desc+'</span></div>'+
+    '</div>';
+  }).join('');
+
+  var resultsHtml = s.results.map(function(r) {
+    return '<div class="sp-result"><div class="sp-result-num">'+r.num+'</div><div class="sp-result-label">'+r.label+'</div></div>';
+  }).join('');
+
+  var stepsHtml = s.steps.map(function(st, i) {
+    return '<div class="sp-step">'+
+      '<div class="sp-step-n">0'+(i+1)+'</div>'+
+      '<div class="sp-step-content"><strong>'+st.title+'</strong><span>'+st.desc+'</span></div>'+
+    '</div>';
+  }).join('');
+
+  var infoHtml = s.info.map(function(i){ return '<li>'+i+'</li>'; }).join('');
+
+  var otherKeys = SERVICE_KEYS.filter(function(k){ return k !== id; }).slice(0,4);
+  var moreHtml = otherKeys.map(function(k, i) {
+    var idx = SERVICE_KEYS.indexOf(k);
+    return '<div class="svc-card" onclick="showService(\''+k+'\')" style="cursor:pointer">'+
+      '<div class="svc-card-icon">'+SERVICE_ICONS[idx]+'</div>'+
+      '<div class="svc-card-title">'+SERVICE_TITLES[idx]+'</div>'+
+      '<div class="svc-card-desc">'+SERVICE_DESCS[idx]+'</div>'+
+      '<div class="svc-card-divider"></div>'+
+      '<button class="svc-card-cta">Explore '+ARROW+'</button>'+
+    '</div>';
+  }).join('');
+
+  document.getElementById('page-service').innerHTML =
+    '<div class="sp-hero">'+
+      '<div class="sp-hero-bg"><img src="'+s.img+'" alt="'+s.badge+'"/><div class="sp-hero-overlay"></div></div>'+
+      '<div class="sp-hero-content">'+
+        '<div class="sp-breadcrumb"><a onclick="goHome(\'services\')">← All Services</a> <span>/</span> <span>'+s.badge+'</span></div>'+
+        '<div class="sp-badge">'+s.badge+'</div>'+
+        '<h1>'+s.title+'</h1>'+
+        '<p class="sp-hero-sub">'+s.sub+'</p>'+
+        '<a class="btn-primary" onclick="var el=document.querySelector(\'#page-service .sp-body\');if(el)el.scrollIntoView({behavior:\'smooth\'})">Explore This System</a>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sp-body">'+
+      '<div class="container">'+
+        '<div class="sp-grid">'+
+          '<div class="sp-main">'+
+            '<h2 class="sp-title">The <em>Problem</em> This Solves</h2>'+
+            '<p class="sp-para">'+s.desc1+'</p>'+
+            '<p class="sp-para">'+s.desc2+'</p>'+
+            '<h2 class="sp-title" style="margin-top:40px">What\'s <em>Included</em></h2>'+
+            '<div class="sp-features">'+featuresHtml+'</div>'+
+            '<h2 class="sp-title" style="margin-top:40px">Measurable <em>Results</em></h2>'+
+            '<div class="sp-results">'+resultsHtml+'</div>'+
+            '<h2 class="sp-title" style="margin-top:40px">Implementation <em>Process</em></h2>'+
+            '<div class="sp-steps">'+stepsHtml+'</div>'+
+          '</div>'+
+          '<div class="sp-sidebar">'+
+            '<div class="sp-cta-card">'+
+              '<h3>Ready to Implement This System?</h3>'+
+              '<p>Book a free 30-minute consultation. We\'ll audit your current process and show you exactly what this system would do for your institute.</p>'+
+              '<a onclick="goHome(\'contact\')" class="btn-primary full" style="cursor:pointer">Schedule Consultation</a>'+
+              '<a href="https://wa.me/919876543210" class="sp-cta-wa" target="_blank">'+
+                '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>'+
+                'Chat on WhatsApp'+
+              '</a>'+
+            '</div>'+
+            '<div class="sp-info-card">'+
+              '<h4>System Details</h4>'+
+              '<ul class="sp-info-list">'+infoHtml+'</ul>'+
+            '</div>'+
+            '<div class="sp-info-card">'+
+              '<h4>Contact</h4>'+
+              '<ul class="sp-info-list">'+
+                '<li>hello@eduautomate.in</li>'+
+                '<li>+91 98765 43210</li>'+
+                '<li>Remote delivery · Pan India</li>'+
+              '</ul>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sp-more">'+
+      '<div class="container">'+
+        '<h2>More <em>Automation Systems</em></h2>'+
+        '<div class="sp-more-grid">'+moreHtml+'</div>'+
+        '<div style="margin-top:40px"><a onclick="goHome(\'services\')" class="btn-primary" style="cursor:pointer">View All 8 Systems</a></div>'+
+      '</div>'+
+    '</div>';
+
+  document.getElementById('page-main').style.display = 'none';
+  document.getElementById('page-service').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.location.hash = 'service/' + id;
+}
+
+function goHome(section) {
+  document.getElementById('page-main').style.display = 'block';
+  document.getElementById('page-service').style.display = 'none';
+  window.location.hash = section || '';
+  if (section) {
+    setTimeout(function() {
+      var el = document.getElementById(section);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 60);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  setTimeout(initObserver, 100);
+}
+
+// Handle hash on load
+(function() {
+  var h = window.location.hash.replace('#', '');
+  if (h.indexOf('service/') === 0) {
+    showService(h.replace('service/', ''));
+  }
+})();
+
+// NAVBAR scroll
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// HAMBURGER
+var hamburger = document.getElementById('hamburger');
+var mobileNav = document.getElementById('mobileNav');
+hamburger.addEventListener('click', function() {
+  var open = mobileNav.classList.toggle('open');
+  var spans = hamburger.querySelectorAll('span');
+  if (open) {
+    spans[0].style.transform = 'translateY(6.5px) rotate(45deg)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'translateY(-6.5px) rotate(-45deg)';
+  } else {
+    spans.forEach(function(s) { s.style.transform = ''; s.style.opacity = ''; });
+  }
+});
+function closeMobile() {
+  mobileNav.classList.remove('open');
+  hamburger.querySelectorAll('span').forEach(function(s) { s.style.transform=''; s.style.opacity=''; });
+}
+
+// SCROLL REVEAL
+function initObserver() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.reveal-fade,.reveal-up,.reveal-card').forEach(function(el) { obs.observe(el); });
+}
+initObserver();
+
+// CONTACT FORM
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var name = document.getElementById('cName').value.trim();
+  var institute = document.getElementById('cInstitute').value.trim();
+  var phone = document.getElementById('cPhone').value.trim();
+  var email = document.getElementById('cEmail').value.trim();
+  var service = document.getElementById('cService').value;
+  var challenge = document.getElementById('cChallenge').value.trim();
+  var status = document.getElementById('formStatus');
+  var btn = document.getElementById('submitBtn');
+
+  if (!name || !phone) {
+    status.className = 'form-status error';
+    status.textContent = 'Please fill in your name and phone number.';
+    return;
+  }
+
+  var msg = '*New Consultation Request — EduAutomate*\n\n';
+  msg += '*Name:* ' + name + '\n';
+  if (institute) msg += '*Institute:* ' + institute + '\n';
+  msg += '*Phone:* ' + phone + '\n';
+  if (email) msg += '*Email:* ' + email + '\n';
+  if (service) msg += '*Interested In:* ' + service + '\n';
+  if (challenge) msg += '\n*Current Challenge:*\n' + challenge;
+
+  var waURL = 'https://wa.me/919876543210?text=' + encodeURIComponent(msg);
+  btn.textContent = 'Opening WhatsApp…';
+  btn.disabled = true;
+  status.className = 'form-status success';
+  status.textContent = 'WhatsApp is opening with your details — just hit Send!';
+  setTimeout(function() {
+    var p = window.open(waURL, '_blank');
+    if (!p || p.closed) window.location.href = waURL;
+  }, 250);
+  setTimeout(function() {
+    btn.textContent = 'Schedule Consultation';
+    btn.disabled = false;
+    status.className = 'form-status';
+    status.textContent = '';
+    document.getElementById('contactForm').reset();
+  }, 7000);
+});
+</script>
+</body>
+</html>
